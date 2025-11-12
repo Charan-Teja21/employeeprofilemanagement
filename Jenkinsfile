@@ -2,33 +2,55 @@ pipeline {
     agent any
 
     environment {
-        // Uncomment below if pushing to DockerHub
-        // DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        // Docker image name
         DOCKER_IMAGE = "employeeprofilemanagement_image"
 
-        // Database URL used when dockerization is done for the application
+        // PostgreSQL database URL (change if needed)
         DB_URL = "jdbc:postgresql://host.docker.internal:5432/epms_db"
+        DB_USERNAME = "postgres"
+        DB_PASSWORD = "postgres"
     }
 
-    // Various stages in the Pipeline Process:
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/somanadha/employeeprofilemanagement.git'
+                git branch: 'main', url: 'https://github.com/Charan-Teja21/employeeprofilemanagement'
             }
         }
 
         stage('Build') {
             steps {
-                // Build docker image using Dockerfile
-                bat "docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} -f Dockerfile ."
+                sh '''
+                    echo "🚀 Building Docker image..."
+                    docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} -f Dockerfile .
+                '''
             }
         }
 
         stage('Run Container') {
             steps {
                 script {
-                    bat "docker run -e DB_URL=jdbc:postgresql://host.docker.internal:5432/epms_db -d --name employeeprofilemanagement -p 8200:8200 ${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                    sh '''
+                        echo "🧹 Cleaning up any existing container..."
+
+                        # Stop and remove existing container if it exists
+                        if [ "$(docker ps -aq -f name=employeeprofilemanagement)" ]; then
+                            echo "🛑 Stopping existing container..."
+                            docker stop employeeprofilemanagement || true
+
+                            echo "🗑️ Removing existing container..."
+                            docker rm -f employeeprofilemanagement || true
+                        fi
+
+                        echo "🐳 Running new Docker container..."
+                        docker run -d \
+                            --name employeeprofilemanagement \
+                            -e SPRING_DATASOURCE_URL=${DB_URL} \
+                            -e SPRING_DATASOURCE_USERNAME=${DB_USERNAME} \
+                            -e SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD} \
+                            -p 8200:8200 \
+                            ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                    '''
                 }
             }
         }
