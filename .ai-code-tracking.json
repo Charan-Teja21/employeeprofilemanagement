@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "records": [
+    {
+      "filePath": "/Users/makacharanteja/Downloads/demo/src/main/java/com/example/demo/DemoApplication.java",
+      "timestamp": 1763136923052,
+      "startOffset": 247,
+      "endOffset": 272,
+      "codeContent": "org.apache.catalina.core.",
+      "aiProbability": 90,
+      "aiTool": "AI Assistant",
+      "detectionMethod": "REALTIME_SPEED_ANALYSIS",
+      "lineCount": 1
+    },
+    {
+      "filePath": "/Users/makacharanteja/Downloads/demo/src/main/java/com/example/demo/DemoApplication.java",
+      "timestamp": 1763136923066,
+      "startOffset": 27,
+      "endOffset": 78,
+      "codeContent": "import org.apache.catalina.core.ApplicationContext;",
+      "aiProbability": 90,
+      "aiTool": "AI Assistant",
+      "detectionMethod": "REALTIME_SPEED_ANALYSIS",
+      "lineCount": 1
+    },
+    {
+      "filePath": "/DemoApplication.java",
+      "timestamp": 1763137213962,
+      "startOffset": 27,
+      "endOffset": 79,
+      "codeContent": "import org.apache.catalina.core.ApplicationContext;\n",
+      "aiProbability": 90,
+      "aiTool": "AI Assistant",
+      "detectionMethod": "REALTIME_SPEED_ANALYSIS",
+      "lineCount": 2
+    }
+  ],
+  "toolStats": {
+    "AI Assistant": {
+      "usageCount": 3,
+      "totalLines": 4
+    }
+  }
+}
