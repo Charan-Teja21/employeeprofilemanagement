@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         // Docker image name
+        KUBECONFIG = "/Users/makacharanteja/.kube/config"
         DOCKER_IMAGE = "employeeprofilemanagement_image"
 
         // PostgreSQL database URL (change if needed)
