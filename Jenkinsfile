@@ -54,8 +54,29 @@ pipeline {
                 }
             }
         }
-    }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    echo "📦 Updating Docker image in Kubernetes manifest..."
 
+                    # macOS-compatible sed fix
+                    sed -i '' "s|image: .*|image: ${DOCKER_IMAGE}:${BUILD_NUMBER}|g" deployment.yaml
+
+                    echo "📁 Applying Namespace..."
+                    kubectl apply -f namespace.yaml
+
+                    echo "🚀 Deploying to Kubernetes..."
+                    kubectl apply -n employeemanagementsystem -f deployment.yaml
+                    kubectl apply -n employeemanagementsystem -f service.yaml
+
+                    echo "⏳ Waiting for rollout to finish..."
+                    kubectl rollout status deployment/employeemanagementsystem-deployment -n employeemanagementsystem
+
+                    echo "✅ Kubernetes deployment completed!"
+                '''
+            }
+        }
+    }
     post {
         success {
             echo "✅ Checkout, Build, Dockerize & Deploy completed successfully!"
